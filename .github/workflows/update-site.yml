@@ -1,0 +1,40 @@
+name: Build & Update Site
+on:
+  workflow_dispatch:
+    inputs:
+      src-branch:
+        description: 'physics-eoy-project branch source'
+        default: 'main'
+        required: true
+        type: 'string'
+      ehandotdev-branch:
+        description: 'ehan.dev branch destination'
+        default: 'main'
+        required: true
+        type: 'string'
+jobs:
+  build:
+    name: Build & Update site
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone physics-eoy-project
+        run: git clone --branch "${{ inputs.src-branch }}" --single-branch https://github.com/ehanahamed/physics-eoy-project.git physics-eoy-project
+      - name: Clone ehan.dev (from GitHub)
+        run: git clone --branch "${{ inputs.ehandotdev-branch }}" --single-branch https://github.com/ehanahamed/ehan.dev.git ehan.dev
+      - name: Install dependencies
+        run: npm ci
+      - name: Build static site
+        run: npm run build
+      - name: Copy physics-eoy-project/build/ into ehan.dev/public/physics-eoy-project/
+        run: |
+          rm -rf ehan.dev/public/physics-eoy-project
+          mkdir -p ehan.dev/public/physics-eoy-project
+          cp -R physics-eoy-project/build/* ehan.dev/public/physics-eoy-project
+      - name: Commit & push to ehan.dev (gh)
+        run: |
+          cd ehan.dev
+          git add .
+          git config --global user.name "Ehan A"
+          git config --global user.email "ehan@ehanaha.me"
+          git commit -m "Update physics-eoy-project"
+          git push https://ehanahamed:${{ secrets.GH_TOKEN }}@github.com/ehanahamed/ehan.dev.git "${{ inputs.ehandotdev-branch }}"
