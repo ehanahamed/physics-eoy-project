@@ -2,6 +2,16 @@ name: Build & Update Site
 on:
   workflow_dispatch:
     inputs:
+      build:
+        description: "rebuild static site?"
+        required: true
+        type: boolean
+        default: true
+      push:
+        description: "push updates to ehan.dev?"
+        required: true
+        type: boolean
+        default: true
       src-branch:
         description: 'physics-eoy-project branch source'
         default: 'main'
@@ -20,17 +30,22 @@ jobs:
       - name: Clone physics-eoy-project
         run: git clone --branch "${{ inputs.src-branch }}" --single-branch https://github.com/ehanahamed/physics-eoy-project.git physics-eoy-project
       - name: Clone ehan.dev (from GitHub)
+        if: ${{ inputs.push == 'true' }}
         run: git clone --branch "${{ inputs.ehandotdev-branch }}" --single-branch https://github.com/ehanahamed/ehan.dev.git ehan.dev
       - name: Install dependencies
+        if: ${{ inputs.build == 'true' }}
         run: npm ci
       - name: Build static site
+        if: ${{ inputs.build == 'true' }}
         run: npm run build
       - name: Copy physics-eoy-project/build/ into ehan.dev/public/physics-eoy-project/
+        if: ${{ inputs.push == 'true' }}
         run: |
           rm -rf ehan.dev/public/physics-eoy-project
           mkdir -p ehan.dev/public/physics-eoy-project
           cp -R physics-eoy-project/build/* ehan.dev/public/physics-eoy-project
       - name: Commit & push to ehan.dev (gh)
+        if: ${{ inputs.push == 'true' }}
         run: |
           cd ehan.dev
           git add .

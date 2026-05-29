@@ -1,0 +1,35 @@
+name: Update EhUI
+on:
+  workflow_dispatch:
+jobs:
+  update_ehui:
+    name: Update EhUI
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone physics-eoy-project
+        run: git clone https://github.com/ehanahamed/physics-eoy-project.git physics-eoy-project
+      - name: Clone EhUI
+        run: git clone https://github.com/ehanahamed/ehui.git ehui
+      - name: Copy compiled CSS
+        run: |
+          timestamp=$(date +"%F_%H.%M")
+          rm physics-eoy-project/static/immutable/css/ehui-*.min.css
+          rm physics-eoy-project/static/immutable/themes/{auto,light,dark}-*.min.css
+          mkdir -p physics-eoy-project/static/immutable/css/
+          mkdir -p physics-eoy-project/static/immutable/themes/
+          cp ehui/site/css/ehui.min.css "physics-eoy-project/static/immutable/css/ehui-$timestamp.min.css"
+          cp ehui/site/themes/auto-flight-fdark.min.css "physics-eoy-project/static/immutable/themes/auto-$timestamp.min.css"
+          cp ehui/site/themes/flight.min.css "physics-eoy-project/static/immutable/themes/light-$timestamp.min.css"
+          cp ehui/site/themes/fdark.min.css "physics-eoy-project/static/immutable/themes/dark-$timestamp.min.css"
+          sed -E -i \
+            -e "s/ehui-[0-9]{4}-[0-9]{2}-[0-9]{2}.min.css/ehui-$timestamp.min.css/g" \
+            -e "s/%theme%-[0-9]{4}-[0-9]{2}-[0-9]{2}.min.css/%theme%-$timestamp.min.css/g" \
+            physics-eoy-project/src/app.html
+      - name: Commit & push
+        run: |
+          cd physics-eoy-project
+          git add .
+          git config --global user.name "Ehan A"
+          git config --global user.email "ehan@ehanaha.me"
+          git commit -m "Update EhUI"
+          git push https://ehanahamed:${{ secrets.GH_TOKEN }}@github.com/ehanahamed/physics-eoy-project.git --all
