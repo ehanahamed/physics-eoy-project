@@ -13,8 +13,8 @@ jobs:
       - name: Copy compiled CSS
         run: |
           timestamp=$(date +"%F_%H.%M")
-          rm physics-eoy-project/static/immutable/css/ehui-*.min.css
-          rm physics-eoy-project/static/immutable/themes/auto-flight-fdark-*.min.css
+          rm -f physics-eoy-project/static/immutable/css/ehui-*.min.css
+          rm -f physics-eoy-project/static/immutable/themes/auto-flight-fdark-*.min.css
           mkdir -p physics-eoy-project/static/immutable/css/
           mkdir -p physics-eoy-project/static/immutable/themes/
           cp ehui/site/css/ehui.min.css "physics-eoy-project/static/immutable/css/ehui-$timestamp.min.css"
