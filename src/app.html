@@ -6,6 +6,16 @@
 		<meta name="text-scale" content="scale" />
         <link rel="stylesheet" href="%sveltekit.assets%/immutable/css/ehui-2026-06-02_02.27.min.css" />
         <link rel="stylesheet" href="%sveltekit.assets%/immutable/themes/auto-flight-fdark-2026-06-02_02.27.min.css" />
+		<script>
+			if (window.localStorage != null) {
+				const theme = window.localStorage.getItem("physicseoyproj:theme");
+				if (theme == "light") {
+					document.rootElement.classList.add("theme-flight");
+				} else if (theme == "dark") {
+					document.rootElement.classList.add("theme-fdark");
+				}
+			}
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">

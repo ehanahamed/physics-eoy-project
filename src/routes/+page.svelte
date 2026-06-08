@@ -6,14 +6,18 @@
     import CheckmarkIcon from "$lib/icons/Checkmark.svelte";
 </script>
 <div class="grid page" style="min-height: 75vh;">
-    <div class="content" style="margin-top: 3rem;">
-
+    <div class="content" style="margin-top: 2rem;">
+        <div class="grid" style="margin-bottom: 1rem; grid-template-columns: auto auto; grid-template-rows: auto;">
+            <div class="flex">
+                <button class="button-box"><EditIcon></EditIcon></button>
+                <button class="button-box"><GridIcon></GridIcon></button>
+            </div>
+            <div class="flex" style="justify-self: end; justify-items: end;">
+                <button class="button-box"><EditIcon></EditIcon></button>
+            </div>
+        </div>
         <p class="fg0">Upload image of track to calculate</p>
         <FileInputBox></FileInputBox>
-        <div class="flex" style="margin-top: 1rem;">
-            <button class="button-box"><EditIcon></EditIcon></button>
-            <button class="button-box"><GridIcon></GridIcon></button>
-        </div>
         <p class="h4" style="margin-top: 2rem;">0 <span class="fg0">total turns on this track</span></p>
         <div class="flex">
             <div>

@@ -1,9 +1,9 @@
 <script>
-    let { accept, multiple = false, onChangeCallback } = $props();
+    let { accept = "", multiple = false, onChangeCallback = undefined } = $props();
     let files;
     let filesArray = $state([]);
     let dropArea;
-    let fileInput;
+    let fileInput = $state();
     let highlightDropArea = $state(false);
     let loading = $state(false);
 
@@ -50,7 +50,7 @@
 }
 </style>
 
-<div class="drop-area flex {highlightDropArea ? "highlight" : ""}"
+<div class="drop-area flex {highlightDropArea ? "highlight" : ""}" role="region"
     bind:this={dropArea}
     ondragenter={e => {
         e.preventDefault();
@@ -87,7 +87,10 @@
     <span>Drag & Drop Here or Select {multiple ? "Files" : "File"}</span>
     <label class="button">
         Select {multiple ? "File" : "File"}
-        <input type="file" {accept} {multiple} class="invisible" bind:this={fileInput} onchange={e => {
+        <input type="file" {accept} {multiple} class="invisible" bind:this={fileInput} onchange={(e) => {
+            if (!(e.target instanceof HTMLInputElement)) {
+                return;
+            }
             files = e.target.files;
             filesArray = Array.from(files);
             if (onChangeCallback) {
