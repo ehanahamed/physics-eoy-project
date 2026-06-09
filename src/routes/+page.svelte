@@ -4,10 +4,56 @@
     import EditIcon from "$lib/icons/Pencil.svelte";
     import GridIcon from "$lib/icons/AppsGrid.svelte";
     import CheckmarkIcon from "$lib/icons/Checkmark.svelte";
+    import SunIcon from "$lib/icons/Sun.svelte";
+    import MoonIcon from "$lib/icons/Moon.svelte";
 </script>
 <svelte:head>
     <title>Physics EOY Project</title>
 </svelte:head>
+<style>
+:global {
+    .theme-flight .show-on-light-mode-only,
+    .theme-fdark .show-on-dark-mode-only {
+        display: inline-block;
+    }
+    .theme-flight .show-on-dark-mode-only,
+    .theme-fdark .show-on-light-mode-only {
+        display: none;
+    }
+    @media (prefers-color-scheme: light) {
+        .show-on-dark-mode-only {
+            display: none;
+        }
+        .show-on-light-mode-only {
+            display: inline-block;
+        }
+        .theme-flight .show-on-light-mode-only,
+        .theme-fdark .show-on-dark-mode-only {
+            display: inline-block;
+        }
+        .theme-flight .show-on-dark-mode-only,
+        .theme-fdark .show-on-light-mode-only {
+            display: none;
+        }
+    }
+    @media (prefers-color-scheme: dark) {
+        .show-on-light-mode-only {
+            display: none;
+        }
+        .show-on-dark-mode-only {
+            display: inline-block;
+        }
+        .theme-flight .show-on-light-mode-only,
+        .theme-fdark .show-on-dark-mode-only {
+            display: inline-block;
+        }
+        .theme-flight .show-on-dark-mode-only,
+        .theme-fdark .show-on-light-mode-only {
+            display: none;
+        }
+    }
+}
+</style>
 <div class="grid page" style="min-height: 75vh;">
     <div class="content" style="margin-top: 2rem;">
         <div class="grid" style="margin-bottom: 1rem; grid-template-columns: auto auto; grid-template-rows: auto;">
@@ -16,7 +62,12 @@
                 <button class="button-box"><GridIcon></GridIcon></button>
             </div>
             <div class="flex" style="justify-self: end; justify-items: end;">
-                <button class="button-box"><EditIcon></EditIcon></button>
+                <button class="button-box" onclick={() => {
+
+                }}>
+                    <SunIcon class="show-on-dark-mode-only"></SunIcon>
+                    <MoonIcon class="show-on-light-mode-only"></MoonIcon>
+                </button>
             </div>
         </div>
         <p class="fg0">Upload image of track to calculate</p>
