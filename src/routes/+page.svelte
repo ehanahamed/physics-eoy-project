@@ -1,143 +1,36 @@
 <script>
     import FileInputBox from "$lib/FileInputBox.svelte";
-    import GHIcon from "$lib/icons/GitHub.svelte";
-    import EditIcon from "$lib/icons/Pencil.svelte";
-    import GridIcon from "$lib/icons/AppsGrid.svelte";
+    // import EditIcon from "$lib/icons/Pencil.svelte";
+    // import GridIcon from "$lib/icons/AppsGrid.svelte";
     import CheckmarkIcon from "$lib/icons/Checkmark.svelte";
-    import SunIcon from "$lib/icons/Sun.svelte";
-    import MoonIcon from "$lib/icons/Moon.svelte";
 
     let uploadButtonEnabled = $state(false);
-    let showUploading = $state(false);
-    let showUploadSection = $state(true);
+    let step = $state(0);
     let fileInput;
+    let canvas;
 </script>
-<svelte:head>
-    <title>Physics EOY Project</title>
-</svelte:head>
-<style>
-:global {
-    .theme-flight .show-on-light-mode-only,
-    .theme-fdark .show-on-dark-mode-only,
-    .theme-flight button.show-on-light-mode-only,
-    .theme-fdark button.show-on-dark-mode-only,
-    .theme-flight .button.show-on-light-mode-only,
-    .theme-fdark .button.show-on-dark-mode-only {
-        display: block;
-    }
-    .theme-flight .show-on-dark-mode-only,
-    .theme-fdark .show-on-light-mode-only,
-    .theme-flight button.show-on-dark-mode-only,
-    .theme-fdark button.show-on-light-mode-only,
-    .theme-flight .button.show-on-dark-mode-only,
-    .theme-fdark .button.show-on-light-mode-only {
-        display: none;
-    }
-    @media (prefers-color-scheme: light) {
-        .show-on-dark-mode-only,
-        button.show-on-dark-mode-only,
-        .button.show-on-dark-mode-only {
-            display: none;
-        }
-        .show-on-light-mode-only,
-        button.show-on-light-mode-only,
-        .button.show-on-light-mode-only {
-            display: block;
-        }
-        .theme-flight .show-on-light-mode-only,
-        .theme-fdark .show-on-dark-mode-only,
-        button.theme-flight .show-on-light-mode-only,
-        button.theme-fdark .show-on-dark-mode-only,
-        .button.theme-flight .show-on-light-mode-only,
-        .button.theme-fdark .show-on-dark-mode-only {
-            display: block;
-        }
-        .theme-flight .show-on-dark-mode-only,
-        .theme-fdark .show-on-light-mode-only,
-        button.theme-flight .show-on-dark-mode-only,
-        button.theme-fdark .show-on-light-mode-only,
-        .button.theme-flight .show-on-dark-mode-only,
-        .button.theme-fdark .show-on-light-mode-only {
-            display: none;
-        }
-    }
-    @media (prefers-color-scheme: dark) {
-        .show-on-light-mode-only,
-        button.show-on-light-mode-only,
-        .button.show-on-light-mode-only {
-            display: none;
-        }
-        .show-on-dark-mode-only,
-        button.show-on-dark-mode-only,
-        .button.show-on-dark-mode-only {
-            display: block;
-        }
-        .theme-flight .show-on-light-mode-only,
-        .theme-fdark .show-on-dark-mode-only,
-        button.theme-flight .show-on-light-mode-only,
-        button.theme-fdark .show-on-dark-mode-only,
-        .button.theme-flight .show-on-light-mode-only,
-        .button.theme-fdark .show-on-dark-mode-only {
-            display: block;
-        }
-        .theme-flight .show-on-dark-mode-only,
-        .theme-fdark .show-on-light-mode-only,
-        button.theme-flight .show-on-dark-mode-only,
-        button.theme-fdark .show-on-light-mode-only,
-        .button.theme-flight .show-on-dark-mode-only,
-        .button.theme-fdark .show-on-light-mode-only {
-            display: none;
-        }
-    }
-}
-</style>
-<div class="grid page" style="min-height: 75vh;">
-    <div class="content" style="margin-top: 2rem;">
-        <div class="grid" style="margin-bottom: 1rem; grid-template-columns: auto auto; grid-template-rows: auto;">
-            <div class="flex">
-                <button class="button-box"><EditIcon></EditIcon></button>
-                <button class="button-box"><GridIcon></GridIcon></button>
-            </div>
-            <div class="flex" style="justify-self: end; justify-items: end;">
-                <button class="button-box show-on-light-mode-only" onclick={() => {
-                    document.documentElement.classList.remove("theme-flight");
-                    document.documentElement.classList.add("theme-fdark");
-                    if (window.localStorage) {
-                        window.localStorage.setItem("physicseoyproj:theme", "dark");
-                    }
-                }}>
-                    <MoonIcon></MoonIcon>
-                </button>
-                <button class="button-box show-on-dark-mode-only" onclick={() => {
-                    document.documentElement.classList.remove("theme-fdark");
-                    document.documentElement.classList.add("theme-flight");
-                    if (window.localStorage) {
-                        window.localStorage.setItem("physicseoyproj:theme", "light");
-                    }
-                }}>
-                    <SunIcon></SunIcon>
-                </button>
-            </div>
-        </div>
-        {#if showUploadSection}
-        <p class="fg0">Upload image of track to calculate</p>
+<div class="grid page">
+    <div class="content" style="margin-top: 1rem;">
+        {#if step == 0}
+        <p style="font-size: 1.2rem;">Select an image of a track <span class="fg0">(from an overhead view)</span></p>
         <!-- accept="image/*,video/*" -->
         <FileInputBox accept="image/*" onChangeCallback={(files) => uploadButtonEnabled = files.length > 0} bind:this={fileInput}></FileInputBox>
         <div class="flex">
             <button disabled={!uploadButtonEnabled} style={uploadButtonEnabled ? "" : "opacity: 0.6;"} onclick={() => {
-                showUploading = true;
                 fileInput.showLoading();
+
+                step = 1;
             }}>
-                {#if showUploading}
-                    <div class="spinner semi-trans size-1.2rem"></div> Uploading...
-                {:else}
-                <CheckmarkIcon></CheckmarkIcon> Upload
-                {/if}
+                <CheckmarkIcon></CheckmarkIcon> Next
             </button>
         </div>
         {:else}
-        hmmmm
+            {#if step == 1}
+                <p style="font-size: 1.2rem;">Click on the color of the track</p>
+            {/if}
+            <canvas bind:this={canvas} style={step == 1 ? "cursor: crosshair;" : ""}></canvas>
         {/if}
+{#if false}
         <p class="h4" style="margin-top: 2rem;">0 <span class="fg0">total turns on this track</span></p>
         <div class="flex">
             <div>
@@ -180,9 +73,6 @@
         <p><span class="ohno">48.9 m/s/s</span> deacceleration before turn #3</p>
         <p><span class="ohno">-9.1 m/s</span> net change in velocity for turn #3</p>
         </div> -->
+        {/if}
     </div>
-</div>
-<div class="footer" style="padding-top: 1rem;">
-    <p class="fg0">AP Physics EOY Project 2026 · Ehan A</p>
-    <button class="faint"><GHIcon></GHIcon> See Source Code</button>
 </div>
