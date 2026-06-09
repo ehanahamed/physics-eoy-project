@@ -1,4 +1,5 @@
 <script>
+    import { onMount } from "svelte";
     import FileInputBox from "$lib/FileInputBox.svelte";
     // import EditIcon from "$lib/icons/Pencil.svelte";
     // import GridIcon from "$lib/icons/AppsGrid.svelte";
@@ -8,6 +9,14 @@
     let step = $state(0);
     let fileInput;
     let canvas;
+
+    let objectURLs = [];
+    onMount(() => {
+        return () => {
+            objectURLs.forEach(objectURL => URL.revokeObjectURL(objectURL));
+        }
+    })
+    let selectedColor = $state();
 </script>
 <div class="grid page">
     <div class="content" style="margin-top: 1rem;">
@@ -18,17 +27,48 @@
         <div class="flex">
             <button disabled={!uploadButtonEnabled} style={uploadButtonEnabled ? "" : "opacity: 0.6;"} onclick={() => {
                 fileInput.showLoading();
-
+                const ctx = canvas.getContext("2d");
+                const img = new Image();
+                img.onload = () => {
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                }
+                const objectURL = URL.createObjectURL(fileInput.getFiles()[0]);
+                objectURLs.push(objectURL);
+                img.src = objectURL;
+                fileInput.hideLoading();
                 step = 1;
             }}>
                 <CheckmarkIcon></CheckmarkIcon> Next
             </button>
         </div>
-        {:else}
-            {#if step == 1}
-                <p style="font-size: 1.2rem;">Click on the color of the track</p>
+        {/if}
+        {#if step == 1}
+            <p style="font-size: 1.2rem;">Click on the color of the track</p>
+        {/if}
+        <canvas bind:this={canvas} class={step > 0 ? "" : "hide"} style="border-radius: 0.8rem; {step == 1 ? "cursor: crosshair;" : ""}" onclick={(e) => {
+            if (step == 1) {
+                const rect = canvas.getBoundingClientRect();
+                const ctx = canvas.getContext("2d");
+                const x = Math.floor(e.clientX - rect.left);
+                const y = Math.floor(e.clientY - rect.top);
+                const pixel = ctx.getImageData(x, y, 1, 1).data;
+                selectedColor = { r: pixel[0], g: pixel[1], b: pixel[2] };
+            }
+        }}></canvas>
+        {#if step == 1}
+            <p>Selected color:</p>
+            {#if selectedColor == null}
+                <p class="fg0" style="font-size: 1.2rem; margin-top: 0.4rem;">(None)</p>
+            {:else}
+            <div style="width: 5rem; height: 3rem; margin-top: 0.4rem; border-radius: 0.8rem; border: solid 0.2rem var(--border); background-color: rgb({selectedColor.r ?? 0} {selectedColor.g ?? 0} {selectedColor.b ?? 0});"></div>
             {/if}
-            <canvas bind:this={canvas} style={step == 1 ? "cursor: crosshair;" : ""}></canvas>
+            <div class="flex">
+                <button disabled={selectedColor?.r == null} style={selectedColor?.r == null ? "opacity: 0.6;" : ""}>
+                    <CheckmarkIcon></CheckmarkIcon> Confirm
+                </button>
+            </div>
         {/if}
 {#if false}
         <p class="h4" style="margin-top: 2rem;">0 <span class="fg0">total turns on this track</span></p>
