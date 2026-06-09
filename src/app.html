@@ -21,11 +21,4 @@
 	<body data-sveltekit-preload-data="hover">
 		<div style="display: contents">%sveltekit.body%</div>
 	</body>
-	<script>
-		window.openCvReady = false;
-		function onOpenCvReady() {
-			window.openCvReady = true;
-		}
-	</script>
-	<script async src="%sveltekit.assets%/immutable/opencv-5.0.0.js" onload="onOpenCvReady();" type="text/javascript"></script>
 </html>

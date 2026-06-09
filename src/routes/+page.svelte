@@ -11,11 +11,6 @@
     let showUploading = $state(false);
     let showUploadSection = $state(true);
     let fileInput;
-
-    function processImg() {
-        showUploading = false;
-        showUploadSection = false;
-    }
 </script>
 <svelte:head>
     <title>Physics EOY Project</title>
@@ -132,15 +127,6 @@
             <button disabled={!uploadButtonEnabled} style={uploadButtonEnabled ? "" : "opacity: 0.6;"} onclick={() => {
                 showUploading = true;
                 fileInput.showLoading();
-                if (window.openCvReady) {
-                    processImg();
-                } else {
-                    const ogOnOpenCvReady = window.onOpenCvReady;
-                    window.onOpenCvReady = () => {
-                        ogOnOpenCvReady();
-                        processImg();
-                    }
-                }
             }}>
                 {#if showUploading}
                     <div class="spinner semi-trans size-1.2rem"></div> Uploading...
