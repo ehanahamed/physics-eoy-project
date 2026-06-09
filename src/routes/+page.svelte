@@ -9,7 +9,13 @@
 
     let uploadButtonEnabled = $state(false);
     let showUploading = $state(false);
+    let showUploadSection = $state(true);
     let fileInput;
+
+    function processImg() {
+        showUploading = false;
+        showUploadSection = false;
+    }
 </script>
 <svelte:head>
     <title>Physics EOY Project</title>
@@ -118,12 +124,23 @@
                 </button>
             </div>
         </div>
+        {#if showUploadSection}
         <p class="fg0">Upload image of track to calculate</p>
-        <FileInputBox accept="image/*,video/*" onChangeCallback={(files) => uploadButtonEnabled = files.length > 0} bind:this={fileInput}></FileInputBox>
+        <!-- accept="image/*,video/*" -->
+        <FileInputBox accept="image/*" onChangeCallback={(files) => uploadButtonEnabled = files.length > 0} bind:this={fileInput}></FileInputBox>
         <div class="flex">
             <button disabled={!uploadButtonEnabled} style={uploadButtonEnabled ? "" : "opacity: 0.6;"} onclick={() => {
                 showUploading = true;
                 fileInput.showLoading();
+                if (window.openCvReady) {
+                    processImg();
+                } else {
+                    const ogOnOpenCvReady = window.onOpenCvReady;
+                    window.onOpenCvReady = () => {
+                        ogOnOpenCvReady();
+                        processImg();
+                    }
+                }
             }}>
                 {#if showUploading}
                     <div class="spinner semi-trans size-1.2rem"></div> Uploading...
@@ -132,6 +149,9 @@
                 {/if}
             </button>
         </div>
+        {:else}
+        hmmmm
+        {/if}
         <p class="h4" style="margin-top: 2rem;">0 <span class="fg0">total turns on this track</span></p>
         <div class="flex">
             <div>

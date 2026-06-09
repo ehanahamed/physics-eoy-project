@@ -8,6 +8,11 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+
+	interface Window {
+		openCvReady: boolean;
+		onOpenCvReady: () => void
+	}
 }
 
 export {};
