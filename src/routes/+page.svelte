@@ -14,7 +14,7 @@
 :global {
     .theme-flight .show-on-light-mode-only,
     .theme-fdark .show-on-dark-mode-only {
-        display: inline-block;
+        display: block;
     }
     .theme-flight .show-on-dark-mode-only,
     .theme-fdark .show-on-light-mode-only {
@@ -25,11 +25,11 @@
             display: none;
         }
         .show-on-light-mode-only {
-            display: inline-block;
+            display: block;
         }
         .theme-flight .show-on-light-mode-only,
         .theme-fdark .show-on-dark-mode-only {
-            display: inline-block;
+            display: block;
         }
         .theme-flight .show-on-dark-mode-only,
         .theme-fdark .show-on-light-mode-only {
@@ -41,11 +41,11 @@
             display: none;
         }
         .show-on-dark-mode-only {
-            display: inline-block;
+            display: block;
         }
         .theme-flight .show-on-light-mode-only,
         .theme-fdark .show-on-dark-mode-only {
-            display: inline-block;
+            display: block;
         }
         .theme-flight .show-on-dark-mode-only,
         .theme-fdark .show-on-light-mode-only {
@@ -62,11 +62,13 @@
                 <button class="button-box"><GridIcon></GridIcon></button>
             </div>
             <div class="flex" style="justify-self: end; justify-items: end;">
-                <button class="button-box" onclick={() => {
-
+                <button class="button-box show-on-light-mode-only" onclick={() => {
                 }}>
-                    <SunIcon class="show-on-dark-mode-only"></SunIcon>
-                    <MoonIcon class="show-on-light-mode-only"></MoonIcon>
+                    <MoonIcon></MoonIcon>
+                </button>
+                <button class="button-box show-on-dark-mode-only" onclick={() => {
+                }}>
+                    <SunIcon></SunIcon>
                 </button>
             </div>
         </div>
