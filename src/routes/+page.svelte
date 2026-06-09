@@ -6,6 +6,10 @@
     import CheckmarkIcon from "$lib/icons/Checkmark.svelte";
     import SunIcon from "$lib/icons/Sun.svelte";
     import MoonIcon from "$lib/icons/Moon.svelte";
+
+    let uploadButtonEnabled = $state(false);
+    let showUploading = $state(false);
+    let fileInput;
 </script>
 <svelte:head>
     <title>Physics EOY Project</title>
@@ -115,7 +119,19 @@
             </div>
         </div>
         <p class="fg0">Upload image of track to calculate</p>
-        <FileInputBox></FileInputBox>
+        <FileInputBox accept="image/*,video/*" onChangeCallback={(files) => uploadButtonEnabled = files.length > 0} bind:this={fileInput}></FileInputBox>
+        <div class="flex">
+            <button disabled={!uploadButtonEnabled} style={uploadButtonEnabled ? "" : "opacity: 0.6;"} onclick={() => {
+                showUploading = true;
+                fileInput.showLoading();
+            }}>
+                {#if showUploading}
+                    <div class="spinner semi-trans size-1.2rem"></div> Uploading...
+                {:else}
+                <CheckmarkIcon></CheckmarkIcon> Upload
+                {/if}
+            </button>
+        </div>
         <p class="h4" style="margin-top: 2rem;">0 <span class="fg0">total turns on this track</span></p>
         <div class="flex">
             <div>

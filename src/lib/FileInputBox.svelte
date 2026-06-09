@@ -1,9 +1,16 @@
-<script>
-    let { accept = "", multiple = false, onChangeCallback = undefined } = $props();
-    let files;
+<script lang="ts">
+    let {
+        accept = "",
+        multiple = false,
+        onChangeCallback
+    }: {
+        accept?: string;
+        multiple?: boolean;
+        onChangeCallback?: (files: FileList) => void;
+    } = $props();
+    let files: FileList;
     let filesArray = $state([]);
-    let dropArea;
-    let fileInput = $state();
+    let fileInput: HTMLInputElement = $state();
     let highlightDropArea = $state(false);
     let loading = $state(false);
 
@@ -51,7 +58,6 @@
 </style>
 
 <div class="drop-area flex {highlightDropArea ? "highlight" : ""}" role="region"
-    bind:this={dropArea}
     ondragenter={e => {
         e.preventDefault();
         e.stopPropagation();
@@ -110,4 +116,3 @@
     </div>
     {/if}
 </div>
-
