@@ -5,6 +5,9 @@
     import GridIcon from "$lib/icons/AppsGrid.svelte";
     import CheckmarkIcon from "$lib/icons/Checkmark.svelte";
 </script>
+<svelte:head>
+    <title>Physics EOY Project</title>
+</svelte:head>
 <div class="grid page" style="min-height: 75vh;">
     <div class="content" style="margin-top: 2rem;">
         <div class="grid" style="margin-bottom: 1rem; grid-template-columns: auto auto; grid-template-rows: auto;">
