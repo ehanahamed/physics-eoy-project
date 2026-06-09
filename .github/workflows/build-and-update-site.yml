@@ -32,12 +32,12 @@ jobs:
       - name: Clone ehan.dev (from GitHub)
         if: ${{ inputs.push }}
         run: git clone --branch "${{ inputs.ehandotdev-branch }}" --single-branch https://github.com/ehanahamed/ehan.dev.git ehan.dev
-      - name: Install dependencies
-        if: ${{ inputs.build }}
-        run: npm ci
       - name: Build static site
         if: ${{ inputs.build }}
-        run: npm run build
+        run: |
+          cd physics-eoy-project
+          npm ci
+          npm run build
       - name: Copy physics-eoy-project/build/ into ehan.dev/public/physics-eoy-project/
         if: ${{ inputs.push }}
         run: |
