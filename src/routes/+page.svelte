@@ -63,10 +63,20 @@
             </div>
             <div class="flex" style="justify-self: end; justify-items: end;">
                 <button class="button-box show-on-light-mode-only" onclick={() => {
+                    document.documentElement.classList.remove("theme-flight");
+                    document.documentElement.classList.add("theme-fdark");
+                    if (window.localStorage) {
+                        window.localStorage.setItem("physicseoyproj:theme", "dark");
+                    }
                 }}>
                     <MoonIcon></MoonIcon>
                 </button>
                 <button class="button-box show-on-dark-mode-only" onclick={() => {
+                    document.documentElement.classList.remove("theme-fdark");
+                    document.documentElement.classList.add("theme-flight");
+                    if (window.localStorage) {
+                        window.localStorage.setItem("physicseoyproj:theme", "light");
+                    }
                 }}>
                     <SunIcon></SunIcon>
                 </button>
