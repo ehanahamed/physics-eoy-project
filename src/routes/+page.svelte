@@ -45,14 +45,16 @@
         </div>
         {/if}
         {#if step == 1}
-            <p style="font-size: 1.2rem;">Click on the color of the track</p>
+            <p style="font-size: 1.2rem;">Select a point anywhere on the track</p>
         {/if}
-        <canvas bind:this={canvas} class={step > 0 ? "" : "hide"} style="border-radius: 0.8rem; {step == 1 ? "cursor: crosshair;" : ""}" onclick={(e) => {
+        <canvas bind:this={canvas} class="canvas {step > 0 ? "" : "hide"}" style={step == 1 ? "cursor: crosshair;" : ""} onclick={(e) => {
             if (step == 1) {
                 const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+                const scaleY = canvas.height / rect.height;
                 const ctx = canvas.getContext("2d");
-                const x = Math.floor(e.clientX - rect.left);
-                const y = Math.floor(e.clientY - rect.top);
+                const x = Math.floor((e.clientX - rect.left) * scaleX);
+                const y = Math.floor((e.clientY - rect.top) * scaleY);
                 const pixel = ctx.getImageData(x, y, 1, 1).data;
                 selectedColor = { r: pixel[0], g: pixel[1], b: pixel[2] };
             }
@@ -62,7 +64,7 @@
             {#if selectedColor == null}
                 <p class="fg0" style="font-size: 1.2rem; margin-top: 0.4rem;">(None)</p>
             {:else}
-            <div style="width: 5rem; height: 3rem; margin-top: 0.4rem; border-radius: 0.8rem; border: solid 0.2rem var(--border); background-color: rgb({selectedColor.r ?? 0} {selectedColor.g ?? 0} {selectedColor.b ?? 0});"></div>
+            <div style="width: 5rem; height: 3rem; margin-top: 0.4rem; border-radius: 0.8rem; border: 0.2rem solid var(--border); background-color: rgb({selectedColor.r ?? 0} {selectedColor.g ?? 0} {selectedColor.b ?? 0});"></div>
             {/if}
             <div class="flex">
                 <button disabled={selectedColor?.r == null} style={selectedColor?.r == null ? "opacity: 0.6;" : ""}>
@@ -116,3 +118,11 @@
         {/if}
     </div>
 </div>
+<style>
+    .canvas {
+        width: min(100%, 40rem);
+        height: auto;
+        border-radius: 0.8rem;
+        border: 0.2rem solid var(--border);
+    }
+</style>
